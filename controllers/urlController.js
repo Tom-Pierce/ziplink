@@ -1,6 +1,19 @@
 const { body, validationResult } = require("express-validator");
 const ShortUrl = require("../models/shortUrl");
 
+exports.url_get = async (req, res, next) => {
+  try {
+    const shortUrl = await ShortUrl.findOneAndUpdate(
+      { key: req.params.key },
+      { $inc: { visits: 1 } }
+    ).exec();
+
+    return res.status(200).json({ url: shortUrl.url });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 exports.url_post = [
   body("url")
     .trim()

@@ -30,8 +30,6 @@ exports.url_post = [
 
     try {
       const key = await generateKey(8);
-      console.log(req.body.url);
-      console.log(key);
       const shortUrl = new ShortUrl({
         key: key,
         url: req.body.url,

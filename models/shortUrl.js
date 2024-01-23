@@ -12,7 +12,6 @@ const ShortUrlSchema = new Schema({
   url: { type: String, required: true },
   visits: { type: Number, required: true, default: 0 },
   expiry: { type: Date, required: true, default: oneWeekFromNow },
-  user: { type: Schema.Types.ObjectId, ref: "user", default: undefined },
 });
 
 module.exports = mongoose.model("shorturl", ShortUrlSchema);

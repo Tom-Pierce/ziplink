@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const router = require("./routes/router.js");
+const cors = require("cors");
 require("dotenv").config();
 
 const mongoose = require("mongoose");
@@ -17,6 +18,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+app.use(cors());
 
 app.use("/api/", router);
 

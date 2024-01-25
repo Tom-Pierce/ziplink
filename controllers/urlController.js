@@ -8,6 +8,7 @@ exports.url_get = async (req, res, next) => {
       { $inc: { visits: 1 }, $set: { lastVisit: Date.now() } }
     ).exec();
 
+    if (shortUrl === null) return res.sendStatus(404);
     return res.status(200).json({ url: shortUrl.url });
   } catch (error) {
     return next(error);

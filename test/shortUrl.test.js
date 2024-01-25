@@ -38,6 +38,11 @@ it("should return a key when a valid url is sent", async () => {
   urlKey = res.body.key;
 });
 
+it("should return 404 if an invalid key is sent", async () => {
+  const res = await chai.request(app).get(`/api/12345678`);
+  expect(res).to.have.status(404);
+});
+
 it("should return the original URL", async () => {
   const res = await chai.request(app).get(`/api/${urlKey}`);
   expect(res).to.have.status(200);

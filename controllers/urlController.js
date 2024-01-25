@@ -5,7 +5,7 @@ exports.url_get = async (req, res, next) => {
   try {
     const shortUrl = await ShortUrl.findOneAndUpdate(
       { key: req.params.key },
-      { $inc: { visits: 1 } }
+      { $inc: { visits: 1 }, $set: { lastVisit: Date.now() } }
     ).exec();
 
     return res.status(200).json({ url: shortUrl.url });

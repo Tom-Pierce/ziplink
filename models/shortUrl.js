@@ -11,6 +11,7 @@ const ShortUrlSchema = new Schema({
   key: { type: String, required: true },
   url: { type: String, required: true },
   visits: { type: Number, required: true, default: 0 },
+  lastVisit: { type: Date, required: true, default: Date.now },
   expiry: { type: Date, required: true, default: oneWeekFromNow },
 });
 

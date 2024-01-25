@@ -1,5 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const ShortUrl = require("../models/shortUrl");
+const generateKey = require("../utils/generateKey");
+const validateCustomKey = require("../utils/validateCustomKey");
 
 exports.url_get = async (req, res, next) => {
   try {
@@ -32,6 +34,8 @@ exports.url_post = [
     .isURL()
     .withMessage("Please provide a valid URL to shorten"),
 
+  body("customKey").trim().optional().escape(),
+
   async (req, res, next) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -41,7 +45,17 @@ exports.url_post = [
     }
 
     try {
-      const key = await generateKey(8);
+      let key;
+      if (req.body.customKey) {
+        const validation = await validateCustomKey(req.body.customKey);
+        if (validation === null) key = req.body.customKey;
+        else
+          return res
+            .status(409)
+            .json({ msg: "Custom URL already in use by another user" });
+      } else {
+        key = await generateKey(8);
+      }
       const shortUrl = new ShortUrl({
         key: key,
         url: req.body.url,
@@ -53,21 +67,3 @@ exports.url_post = [
     }
   },
 ];
-
-const generateKey = async (length) => {
-  const characters =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-  let key = "";
-  const charactersLength = characters.length;
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charactersLength);
-    key += characters.charAt(randomIndex);
-  }
-  const duplicate = await ShortUrl.findOne({ key: key }).exec();
-  if (duplicate) {
-    return generateKey(length);
-  } else {
-    return key;
-  }
-};

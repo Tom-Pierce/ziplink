@@ -65,3 +65,21 @@ it("should return 404 if an invalid key is sent with clicks", async () => {
   const res = await chai.request(app).get(`/api/clicks/12345678`);
   expect(res).to.have.status(404);
 });
+
+it("should return the custom url key when sent", async () => {
+  const res = await chai
+    .request(app)
+    .post("/api/url")
+    .send({ url: "https://twitch.tv", customKey: "thisIsACustomURL" });
+  expect(res).to.have.status(201);
+  expect(res.body.key).to.equal("thisIsACustomURL");
+});
+
+it("should respond with 409 if the same custom url key is used twice", async () => {
+  const res = await chai
+    .request(app)
+    .post("/api/url")
+    .send({ url: "https://twitch.tv", customKey: "thisIsACustomURL" });
+  expect(res).to.have.status(409);
+  expect(res.body.msg).to.equal("Custom URL already in use by another user");
+});

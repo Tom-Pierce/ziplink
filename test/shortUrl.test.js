@@ -48,3 +48,20 @@ it("should return the original URL", async () => {
   expect(res).to.have.status(200);
   expect(res.body.url).to.equal("https://twitch.tv");
 });
+
+it("should return the number of clicks a URL has gotten", async () => {
+  const res = await chai.request(app).get(`/api/clicks/${urlKey}`);
+  expect(res).to.have.status(200);
+  expect(res.body.clicks).to.equal(1);
+
+  // simulate a second click to check it is updating
+  await chai.request(app).get(`/api/${urlKey}`);
+  const res2 = await chai.request(app).get(`/api/clicks/${urlKey}`);
+  expect(res2).to.have.status(200);
+  expect(res2.body.clicks).to.equal(2);
+});
+
+it("should return 404 if an invalid key is sent with clicks", async () => {
+  const res = await chai.request(app).get(`/api/clicks/12345678`);
+  expect(res).to.have.status(404);
+});

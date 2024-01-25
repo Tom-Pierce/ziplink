@@ -15,6 +15,17 @@ exports.url_get = async (req, res, next) => {
   }
 };
 
+exports.clicks_get = async (req, res, next) => {
+  try {
+    const shortUrl = await ShortUrl.findOne({ key: req.params.key }).exec();
+
+    if (shortUrl === null) return res.sendStatus(404);
+    return res.status(200).json({ clicks: shortUrl.visits });
+  } catch (error) {
+    return next(error);
+  }
+};
+
 exports.url_post = [
   body("url")
     .trim()

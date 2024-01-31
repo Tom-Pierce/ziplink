@@ -11,6 +11,7 @@ findOrCreateUser = async (userObj) => {
         googleId: userObj.googleId,
         username: userObj.username,
         email: userObj.email,
+        pfp: userObj.pfp,
       });
     }
 

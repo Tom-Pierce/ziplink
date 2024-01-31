@@ -6,6 +6,7 @@ const UserSchema = new Schema({
   googleId: { type: String, required: true },
   zipLinks: [{ type: Schema.Types.ObjectId, ref: "shortUrl" }],
   email: { type: String, required: true },
+  pfp: { type: String, required: false },
 });
 
 module.exports = mongoose.model("user", UserSchema);

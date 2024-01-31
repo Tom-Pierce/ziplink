@@ -19,6 +19,7 @@ passport.use(
           googleId: profile.id,
           username: profile.displayName,
           email: profile.emails[0].value,
+          pfp: profile.photos[0].value,
         });
         return cb(null, profile);
       } catch (error) {

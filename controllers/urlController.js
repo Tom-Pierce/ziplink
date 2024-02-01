@@ -1,6 +1,5 @@
 const { body, validationResult } = require("express-validator");
 const ShortUrl = require("../models/shortUrl");
-const User = require("../models/user");
 const generateKey = require("../utils/generateKey");
 const validateCustomKey = require("../utils/validateCustomKey");
 

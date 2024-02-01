@@ -4,7 +4,7 @@ exports.logout = (req, res, next) => {
       return next(err);
     }
   });
-  res.redirect("http://localhost:5173/");
+  res.redirect(req.header.origin);
 };
 
 exports.user_info = (req, res, next) => {

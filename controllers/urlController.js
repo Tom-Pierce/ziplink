@@ -3,7 +3,6 @@ const ShortUrl = require("../models/shortUrl");
 const User = require("../models/user");
 const generateKey = require("../utils/generateKey");
 const validateCustomKey = require("../utils/validateCustomKey");
-const shortUrl = require("../models/shortUrl");
 
 exports.url_get = async (req, res, next) => {
   try {
@@ -58,19 +57,21 @@ exports.url_post = [
       } else {
         key = await generateKey(8);
       }
-      const shortUrl = new ShortUrl({
-        key: key,
-        url: req.body.url,
-      });
-      shortUrl.save();
-
-      // if user is logged in add ziplink to their user
+      // if user is logged in, create shortUrl with their id
+      let shortUrl;
       if (req.user) {
-        await User.findOneAndUpdate(
-          { _id: req.user._id },
-          { $push: { zipLinks: shortUrl._id } }
-        );
+        shortUrl = new ShortUrl({
+          key: key,
+          url: req.body.url,
+          user: req.user._id,
+        });
+      } else {
+        shortUrl = new ShortUrl({
+          key: key,
+          url: req.body.url,
+        });
       }
+      shortUrl.save();
 
       return res.status(201).json({ key: key });
     } catch (error) {
@@ -82,10 +83,8 @@ exports.url_post = [
 exports.zipLinks_get = async (req, res, next) => {
   if (req.user) {
     try {
-      const user = await User.findById(req.user._id, "zipLinks")
-        .populate("zipLinks")
-        .exec();
-      res.json({ zipLinks: user.zipLinks });
+      const zipLinks = await ShortUrl.find({ user: req.user._id }).exec();
+      res.json({ zipLinks: zipLinks });
     } catch (error) {
       res.sendStatus(500);
       console.error("Error fetching data: ", error);

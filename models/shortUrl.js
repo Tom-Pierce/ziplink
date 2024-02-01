@@ -15,4 +15,4 @@ const ShortUrlSchema = new Schema({
   expiry: { type: Date, required: true, default: oneWeekFromNow },
 });
 
-module.exports = mongoose.model("shorturl", ShortUrlSchema);
+module.exports = mongoose.model("shortUrl", ShortUrlSchema);

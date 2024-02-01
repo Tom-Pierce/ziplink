@@ -1,7 +1,9 @@
 const { body, validationResult } = require("express-validator");
 const ShortUrl = require("../models/shortUrl");
+const User = require("../models/user");
 const generateKey = require("../utils/generateKey");
 const validateCustomKey = require("../utils/validateCustomKey");
+const shortUrl = require("../models/shortUrl");
 
 exports.url_get = async (req, res, next) => {
   try {
@@ -61,9 +63,34 @@ exports.url_post = [
         url: req.body.url,
       });
       shortUrl.save();
+
+      // if user is logged in add ziplink to their user
+      if (req.user) {
+        await User.findOneAndUpdate(
+          { _id: req.user._id },
+          { $push: { zipLinks: shortUrl._id } }
+        );
+      }
+
       return res.status(201).json({ key: key });
     } catch (error) {
       return next(error);
     }
   },
 ];
+
+exports.zipLinks_get = async (req, res, next) => {
+  if (req.user) {
+    try {
+      const user = await User.findById(req.user._id, "zipLinks")
+        .populate("zipLinks")
+        .exec();
+      res.json({ zipLinks: user.zipLinks });
+    } catch (error) {
+      res.sendStatus(500);
+      console.error("Error fetching data: ", error);
+    }
+  } else {
+    res.sendStatus(401);
+  }
+};

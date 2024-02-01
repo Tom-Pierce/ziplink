@@ -1,4 +1,4 @@
-const User = require("../models/User");
+const User = require("../models/user");
 
 // function to findOrCreateUser as mongooseJS does not have on built in
 findOrCreateUser = async (userObj) => {

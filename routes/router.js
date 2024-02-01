@@ -9,4 +9,6 @@ router.get("/:key", urlController.url_get);
 
 router.post("/url", urlController.url_post);
 
+router.get("/user/ziplinks", urlController.zipLinks_get);
+
 module.exports = router;

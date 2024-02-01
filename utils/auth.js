@@ -1,7 +1,7 @@
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreateUser = require("../utils/findOrCreateUser");
-const User = require("../models/User");
+const User = require("../models/user");
 
 passport.use(
   new GoogleStrategy(
@@ -9,7 +9,7 @@ passport.use(
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
       callbackURL: "http://localhost:3000/api/auth/google/callback",
-      prompt: "select_account consent",
+      prompt: "select_account",
       scope: ["profile"],
       state: true,
     },

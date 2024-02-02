@@ -106,23 +106,25 @@ exports.zipLink_delete = async (req, res, next) => {
         { key: req.params.key },
         "user"
       ).exec();
+
       // ziplink not found
       if (!zipLink) {
-        return res.status(404);
+        return res.status(404).send("Not Found");
       }
+
       if (zipLink.user.equals(req.user._id)) {
         await ShortUrl.findByIdAndDelete(zipLink._id).exec();
         // ziplink found and deleted
-        return res.status(204);
+        return res.status(204).send();
       } else {
         // ziplink is not owned by user
-        return res.status(401);
+        return res.status(401).send("Unauthorized");
       }
     } catch (error) {
-      res.status(500);
       console.error("Error fetching data:", error);
+      return res.status(500).send("Internal Server Error: " + error.message);
     }
   } else {
-    res.status(401);
+    return res.status(401).send("Unauthorized");
   }
 };

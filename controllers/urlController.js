@@ -81,8 +81,14 @@ exports.url_post = [
 
 exports.zipLinks_get = async (req, res, next) => {
   if (req.user) {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 5;
     try {
-      const zipLinks = await ShortUrl.find({ user: req.user._id }).exec();
+      const zipLinks = await ShortUrl.find({ user: req.user._id })
+        .skip((page - 1) * limit)
+        .limit(limit)
+        .sort({ visits: -1 })
+        .exec();
       res.json({ zipLinks: zipLinks });
     } catch (error) {
       res.sendStatus(500);

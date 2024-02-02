@@ -83,13 +83,19 @@ exports.zipLinks_get = async (req, res, next) => {
   if (req.user) {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 5;
+
+    const findPromise = ShortUrl.find({ user: req.user._id })
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .sort({ visits: -1 })
+      .exec();
+
+    const countPromise = ShortUrl.countDocuments({ user: req.user._id }).exec();
+
     try {
-      const zipLinks = await ShortUrl.find({ user: req.user._id })
-        .skip((page - 1) * limit)
-        .limit(limit)
-        .sort({ visits: -1 })
-        .exec();
-      res.json({ zipLinks: zipLinks });
+      const [zipLinks, count] = await Promise.all([findPromise, countPromise]);
+
+      res.json({ zipLinks, count });
     } catch (error) {
       res.sendStatus(500);
       console.error("Error fetching data: ", error);

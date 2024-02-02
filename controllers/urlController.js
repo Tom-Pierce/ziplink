@@ -98,3 +98,31 @@ exports.zipLinks_get = async (req, res, next) => {
     res.sendStatus(401);
   }
 };
+
+exports.zipLink_delete = async (req, res, next) => {
+  if (req.user) {
+    try {
+      const zipLink = await ShortUrl.findOne(
+        { key: req.params.key },
+        "user"
+      ).exec();
+      // ziplink not found
+      if (!zipLink) {
+        return res.status(404);
+      }
+      if (zipLink.user.equals(req.user._id)) {
+        await ShortUrl.findByIdAndDelete(zipLink._id).exec();
+        // ziplink found and deleted
+        return res.status(204);
+      } else {
+        // ziplink is not owned by user
+        return res.status(401);
+      }
+    } catch (error) {
+      res.status(500);
+      console.error("Error fetching data:", error);
+    }
+  } else {
+    res.status(401);
+  }
+};

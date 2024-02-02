@@ -7,6 +7,8 @@ router.get("/clicks/:key", urlController.clicks_get);
 
 router.get("/:key", urlController.url_get);
 
+router.delete("/:key", urlController.zipLink_delete);
+
 router.post("/url", urlController.url_post);
 
 router.get("/user/ziplinks", urlController.zipLinks_get);

@@ -4,7 +4,7 @@ exports.logout = (req, res, next) => {
       return next(err);
     }
   });
-  res.redirect(req.header.origin);
+  res.redirect(process.env.CLIENT_URL);
 };
 
 exports.user_info = (req, res, next) => {

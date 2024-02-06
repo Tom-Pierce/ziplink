@@ -8,14 +8,8 @@ exports.logout = (req, res, next) => {
 };
 
 exports.user_info = (req, res, next) => {
-  if (req.user) {
-    res.status(200).json({
-      success: true,
-      user: req.user,
-    });
-  } else {
-    res.status(401).json({
-      success: false,
-    });
-  }
+  res.status(200).json({
+    success: true,
+    user: req.user,
+  });
 };

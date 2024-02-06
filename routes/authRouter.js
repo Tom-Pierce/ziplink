@@ -15,7 +15,7 @@ authRouter.get(
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: "http://localhost:5173/",
+    successRedirect: process.env.CLIENT_URL,
   })
 );
 

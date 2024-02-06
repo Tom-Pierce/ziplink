@@ -47,6 +47,9 @@ exports.url_post = [
     try {
       let key;
       if (req.body.customKey) {
+        // non logged in users cannot create custom URLs
+        if (!req.user) return res.sendStatus(401);
+
         const validation = await validateCustomKey(req.body.customKey);
         if (validation === null) key = req.body.customKey;
         else
@@ -80,57 +83,49 @@ exports.url_post = [
 ];
 
 exports.zipLinks_get = async (req, res, next) => {
-  if (req.user) {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 5;
+  const page = parseInt(req.query.page) || 1;
+  const limit = parseInt(req.query.limit) || 5;
 
-    const findPromise = ShortUrl.find({ user: req.user._id })
-      .skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ visits: -1 })
-      .exec();
+  const findPromise = ShortUrl.find({ user: req.user._id })
+    .skip((page - 1) * limit)
+    .limit(limit)
+    .sort({ visits: -1 })
+    .exec();
 
-    const countPromise = ShortUrl.countDocuments({ user: req.user._id }).exec();
+  const countPromise = ShortUrl.countDocuments({ user: req.user._id }).exec();
 
-    try {
-      const [zipLinks, count] = await Promise.all([findPromise, countPromise]);
+  try {
+    const [zipLinks, count] = await Promise.all([findPromise, countPromise]);
 
-      res.json({ zipLinks, count });
-    } catch (error) {
-      res.sendStatus(500);
-      console.error("Error fetching data: ", error);
-    }
-  } else {
-    res.sendStatus(401);
+    res.json({ zipLinks, count });
+  } catch (error) {
+    res.sendStatus(500);
+    console.error("Error fetching data: ", error);
   }
 };
 
 exports.zipLink_delete = async (req, res, next) => {
-  if (req.user) {
-    try {
-      const zipLink = await ShortUrl.findOne(
-        { key: req.params.key },
-        "user"
-      ).exec();
+  try {
+    const zipLink = await ShortUrl.findOne(
+      { key: req.params.key },
+      "user"
+    ).exec();
 
-      // ziplink not found
-      if (!zipLink) {
-        return res.status(404).send("Not Found");
-      }
-
-      if (zipLink.user.equals(req.user._id)) {
-        await ShortUrl.findByIdAndDelete(zipLink._id).exec();
-        // ziplink found and deleted
-        return res.status(204).send();
-      } else {
-        // ziplink is not owned by user
-        return res.status(401).send("Unauthorized");
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return res.status(500).send("Internal Server Error: " + error.message);
+    // ziplink not found
+    if (!zipLink) {
+      return res.status(404).send("Not Found");
     }
-  } else {
-    return res.status(401).send("Unauthorized");
+
+    if (zipLink.user.equals(req.user._id)) {
+      await ShortUrl.findByIdAndDelete(zipLink._id).exec();
+      // ziplink found and deleted
+      return res.status(204).send();
+    } else {
+      // ziplink is not owned by user
+      return res.status(401).send("Unauthorized");
+    }
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return res.status(500).send("Internal Server Error: " + error.message);
   }
 };

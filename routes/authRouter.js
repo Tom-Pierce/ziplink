@@ -1,6 +1,7 @@
 const express = require("express");
 const authRouter = express.Router();
 const passport = require("passport");
+const isLoggedIn = require("../utils/isLoggedIn");
 const authController = require("../controllers/authController");
 
 authRouter.get(
@@ -18,7 +19,7 @@ authRouter.get(
   })
 );
 
-authRouter.get("/userInfo", authController.user_info);
+authRouter.get("/userInfo", isLoggedIn, authController.user_info);
 
 authRouter.get("/logout", authController.logout);
 

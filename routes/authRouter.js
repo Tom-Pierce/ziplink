@@ -20,6 +20,10 @@ authRouter.get(
   })
 );
 
+authRouter.post("/local/signup", authController.local_signup);
+
+authRouter.post("/local/login", authController.local_login);
+
 authRouter.get("/userInfo", isLoggedIn, authController.user_info);
 
 authRouter.get("/logout", authController.logout);

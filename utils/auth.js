@@ -11,7 +11,7 @@ passport.use(
     {
       clientID: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "http://localhost:3000/api/auth/google/callback",
+      callbackURL: `${process.env.API_URL}/api/auth/google/callback`,
       prompt: "select_account",
       scope: ["profile"],
       state: true,

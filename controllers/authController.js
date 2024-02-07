@@ -107,3 +107,8 @@ exports.local_login = (req, res, next) => {
     });
   })(req, res, next);
 };
+
+exports.is_authenticated = (req, res, next) => {
+  if (req.isAuthenticated()) res.json({ authenticated: true });
+  else res.json({ authenticated: false });
+};

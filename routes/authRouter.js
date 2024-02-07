@@ -15,8 +15,8 @@ authRouter.get(
 authRouter.get(
   "/google/callback",
   passport.authenticate("google", {
-    successRedirect: process.env.CLIENT_URL + "?successfulLogin=true",
-    failureRedirect: process.env.CLIENT_URL + "?successfulLogin=false",
+    successRedirect: process.env.CLIENT_URL,
+    failureRedirect: process.env.CLIENT_URL,
   })
 );
 
@@ -27,5 +27,7 @@ authRouter.post("/local/login", authController.local_login);
 authRouter.get("/userInfo", isLoggedIn, authController.user_info);
 
 authRouter.get("/logout", authController.logout);
+
+authRouter.get("/isAuthenticated", authController.is_authenticated);
 
 module.exports = authRouter;

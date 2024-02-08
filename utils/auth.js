@@ -21,6 +21,7 @@ passport.use(
         const user = await findOrCreateUser({
           email: profile._json.email,
           pfp: profile._json.picture,
+          accountType: "google",
         });
         return cb(null, user);
       } catch (error) {

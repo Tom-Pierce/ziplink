@@ -83,6 +83,7 @@ exports.local_signup = [
         const user = new User({
           email: req.body.email,
           password: hashedPassword,
+          accountType: "local",
         });
 
         await user.save();

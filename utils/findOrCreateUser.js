@@ -10,6 +10,7 @@ findOrCreateUser = async (userObj) => {
       user = await User.create({
         email: userObj.email,
         pfp: userObj.pfp ? userObj.pfp : undefined,
+        accountType: userObj.accountType,
       });
     }
 

@@ -9,7 +9,7 @@ Ziplink is a powerful tool for managing and sharing links. Whether you're lookin
 ## Features
 
 - **URL Shortening**: Provide a simple endpoint to shorten long URLs as well as the ability to create custom shortened URls.
-- **Link Management**: Allow users to manage their shortened URLs, including creating, updating, and deleting ziplinks.
+- **Link Management**: Allow users to manage their shortened URLs, including creating, and deleting ziplinks.
 - **Analytics Tracking**: Track metrics for each URL, such as clicks.
 
 ## Getting Started

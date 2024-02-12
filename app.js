@@ -3,6 +3,8 @@ const cookieParser = require("cookie-parser");
 const router = require("./routes/router.js");
 const cors = require("cors");
 const session = require("express-session");
+const MongoStore = require("connect-mongo");
+
 require("dotenv").config();
 require("./utils/auth.js");
 
@@ -26,6 +28,9 @@ app.use(
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+    }),
   })
 );
 app.use(passport.initialize());

@@ -26,6 +26,10 @@ To get started with the Ziplink API, follow these steps:
 
 5. **Run the Server**: Start the server using `npm start`. The API will be accessible at the specified port (default is 3000).
 
+## To-Do
+
+Implement JWTs and refresh tokens instead of session management for authentication, this will provide faster response times as well as less database queries
+
 ## Contributing
 
 Contributions are welcome! If you have ideas for new features, improvements, or bug fixes, feel free to open an issue or submit a pull request.
